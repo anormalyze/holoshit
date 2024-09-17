@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <defs>
+    <radialGradient id="holographicGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:0.4"/>
+    </radialGradient>
+  </defs>
+  <circle id="holographic" cx="20" cy="20" r="20" fill="url(#holographicGradient)"/>
+  <text x="20" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#ffffff">Holographic</text>
+</svg>

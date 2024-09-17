@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <radialGradient id="nodeGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:0.4"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#1a1a2e"/>
+
+  <!-- Nodes -->
+  <use href="quantum-node.svg#quantum" x="200" y="200"/>
+  <use href="neural-node.svg#neural" x="400" y="200"/>
+  <use href="holographic-node.svg#holographic" x="600" y="200"/>
+  <use href="ifotonic-node.svg#ifotonic" x="400" y="400"/>
+
+  <!-- Connections -->
+  <line x1="200" y1="200" x2="400" y2="200" stroke="#4a69bd" stroke-width="2"/>
+  <line x1="400" y1="200" x2="600" y2="200" stroke="#4a69bd" stroke-width="2"/>
+  <line x1="200" y1="200" x2="400" y2="400" stroke="#4a69bd" stroke-width="2"/>
+  <line x1="400" y1="200" x2="400" y2="400" stroke="#4a69bd" stroke-width="2"/>
+  <line x1="600" y1="200" x2="400" y2="400" stroke="#4a69bd" stroke-width="2"/>
+
+  <!-- Waves -->
+  <circle id="wave1" cx="200" cy="200" r="0" fill="none" stroke="#e74c3c" stroke-width="2"/>
+  <circle id="wave2" cx="400" cy="200" r="0" fill="none" stroke="#2ecc71" stroke-width="2"/>
+  <circle id="wave3" cx="600" cy="200" r="0" fill="none" stroke="#f39c12" stroke-width="2"/>
+  <circle id="wave4" cx="400" cy="400" r="0" fill="none" stroke="#9b59b6" stroke-width="2"/>
+
+  <script type="text/javascript"><![CDATA[
+    const waves = [
+      document.getElementById('wave1'),
+      document.getElementById('wave2'),
+      document.getElementById('wave3'),
+      document.getElementById('wave4')
+    ];
+    const nodes = document.querySelectorAll('use');
+
+    let startTime = null;
+    const cycleDuration = 10000; // 10 seconds per cycle
+    const maxWaveRadius = 100;
+
+    function easeInOutQuint(t) {
+      return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t;
+    }
+
+    function animateNetwork(timestamp) {
+      if (!startTime) startTime = timestamp;
+      let elapsedTime = timestamp - startTime;
+      let progress = (elapsedTime % cycleDuration) / cycleDuration;
+
+      // Wave animations
+      waves.forEach((wave, index) => {
+        let waveProgress = (progress + index * 0.25) % 1;
+        let waveRadius = easeInOutQuint(waveProgress) * maxWaveRadius;
+        wave.setAttribute('r', waveRadius);
+        wave.setAttribute('stroke-opacity', 1 - waveProgress);
+      });
+
+      // Node activations
+      nodes.forEach((node, index) => {
+        let nodeProgress = (progress + index * 0.25) % 1;
+        node.setAttribute('opacity', nodeProgress < 0.1 ? 0.5 : 1);
+      });
+
+      // Update data display in the other SVG
+      if (window.parent.updateDataDisplay) {
+        window.parent.updateDataDisplay(progress);
+      }
+
+      requestAnimationFrame(animateNetwork);
+    }
+
+    // Start the animation
+    requestAnimationFrame(animateNetwork);
+  ]]></script>
+</svg>

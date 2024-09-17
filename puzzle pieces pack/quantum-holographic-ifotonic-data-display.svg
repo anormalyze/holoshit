@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#1a1a2e"/>
+
+  <!-- Data Display -->
+  <g transform="translate(20, 20)">
+    <text x="0" y="0" font-family="Arial" font-size="14" fill="#ffffff">System Coherence:</text>
+    <text id="coherenceValue" x="160" y="0" font-family="Arial" font-size="14" fill="#e74c3c">0%</text>
+
+    <text x="0" y="30" font-family="Arial" font-size="14" fill="#ffffff">Interaction Cycles:</text>
+    <text id="cycleCounter" x="160" y="30" font-family="Arial" font-size="14" fill="#2ecc71">0</text>
+
+    <text x="0" y="60" font-family="Arial" font-size="14" fill="#ffffff">Network State:</text>
+    <text id="systemStatus" x="120" y="60" font-family="Arial" font-size="14" fill="#3498db">Initializing</text>
+
+    <text x="0" y="90" font-family="Arial" font-size="14" fill="#ffffff">Quantum Entanglement:</text>
+    <text id="entanglementValue" x="180" y="90" font-family="Arial" font-size="14" fill="#f39c12">0%</text>
+
+    <text x="0" y="120" font-family="Arial" font-size="14" fill="#ffffff">Holographic Fidelity:</text>
+    <text id="fidelityValue" x="160" y="120" font-family="Arial" font-size="14" fill="#9b59b6">0%</text>
+
+    <text x="0" y="150" font-family="Arial" font-size="14" fill="#ffffff">Ifotonic Flux:</text>
+    <text id="fluxValue" x="110" y="150" font-family="Arial" font-size="14" fill="#1abc9c">0 units</text>
+  </g>
+
+  <script type="text/javascript"><![CDATA[
+    function updateData(progress) {
+      document.getElementById('coherenceValue').textContent = `${Math.floor(Math.sin(progress * Math.PI) * 50 + 50)}%`;
+      document.getElementById('cycleCounter').textContent = Math.floor(progress * 20);  // Asumiendo 20 ciclos totales
+      
+      let status;
+      if (progress < 0.25) status = 'Quantum Fluctuation';
+      else if (progress < 0.5) status = 'Neural Processing';
+      else if (progress < 0.75) status = 'Holographic Projection';
+      else status = 'Ifotonic Integration';
+      document.getElementById('systemStatus').textContent = status;
+
+      document.getElementById('entanglementValue').textContent = `${Math.floor(Math.cos(progress * Math.PI) * 50 + 50)}%`;
+      document.getElementById('fidelityValue').textContent = `${Math.floor(Math.sin(progress * Math.PI * 2) * 25 + 75)}%`;
+      document.getElementById('fluxValue').textContent = `${(Math.sin(progress * Math.PI * 4) * 50 + 50).toFixed(2)} units`;
+    }
+
+    // Esta función será llamada desde el SVG de animación
+    window.updateDataDisplay = updateData;
+  ]]></script>
+</svg>
