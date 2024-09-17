@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 700">
+  <defs>
+    <radialGradient id="nodeGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:0.4" />
+    </radialGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="800" height="700" fill="#1a1a2e" />
+  <!-- Nodes -->
+  <circle id="node1" cx="200" cy="300" r="20" fill="url(#nodeGradient)" />
+  <circle id="node2" cx="600" cy="300" r="20" fill="url(#nodeGradient)" />
+  <!-- Connection -->
+  <line x1="200" y1="300" x2="600" y2="300" stroke="#4a69bd" stroke-width="2" />
+  <!-- Wave -->
+  <circle id="wave" cx="200" cy="300" r="0" fill="none" stroke="#e74c3c" stroke-width="2" />
+  <!-- Data Display -->
+  <text id="data1" x="200" y="340" text-anchor="middle" font-family="Arial" font-size="14" fill="#ffffff" opacity="0">Nodo 1</text>
+  <text id="data2" x="600" y="340" text-anchor="middle" font-family="Arial" font-size="14" fill="#ffffff" opacity="0">Nodo 2</text>
+  <!-- Dynamic Metrics -->
+  <g transform="translate(50, 550)">
+    <text x="0" y="0" font-family="Arial" font-size="14" fill="#ffffff">Latencia:</text>
+    <text id="latencyValue" x="100" y="0" font-family="Arial" font-size="14" fill="#e74c3c">0 ms</text>
+    <text x="0" y="30" font-family="Arial" font-size="14" fill="#ffffff">Ciclos completados:</text>
+    <text id="cycleCounter" x="180" y="30" font-family="Arial" font-size="14" fill="#2ecc71">0</text>
+    <text x="0" y="60" font-family="Arial" font-size="14" fill="#ffffff">Estado del sistema:</text>
+    <text id="systemStatus" x="160" y="60" font-family="Arial" font-size="14" fill="#3498db">Iniciando</text>
+    <text x="400" y="0" font-family="Arial" font-size="14" fill="#ffffff">Distancia de la onda:</text>
+    <text id="waveDistance" x="570" y="0" font-family="Arial" font-size="14" fill="#f39c12">0 unidades</text>
+    <text x="400" y="30" font-family="Arial" font-size="14" fill="#ffffff">Amplitud:</text>
+    <text id="waveAmplitude" x="490" y="30" font-family="Arial" font-size="14" fill="#9b59b6">0</text>
+    <text x="400" y="60" font-family="Arial" font-size="14" fill="#ffffff">Frecuencia de onda:</text>
+    <text id="waveFrequency" x="560" y="60" font-family="Arial" font-size="14" fill="#1abc9c">0 Hz</text>
+  </g>
+  <!-- Mathematical Formulas -->
+  <g transform="translate(50, 650)" font-family="Arial" font-size="12" fill="#ffffff">
+    <text x="0" y="0">Ecuación de onda: y(x,t) = A sin(kx - ωt)</text>
+    <text x="0" y="20">Velocidad de fase: v = ω/k = λf</text>
+    <text x="400" y="0">Energía de onda: E = ½A²ω²μ</text>
+    <text x="400" y="20">Intensidad: I = ½A²ω²ρv = P/A</text>
+  </g>
+  <script type="text/javascript">
+    <![CDATA[
+    const wave = document.getElementById('wave');
+    const node1 = document.getElementById('node1');
+    const node2 = document.getElementById('node2');
+    const data1 = document.getElementById('data1');
+    const data2 = document.getElementById('data2');
+    const latencyValue = document.getElementById('latencyValue');
+    const cycleCounter = document.getElementById('cycleCounter');
+    const systemStatus = document.getElementById('systemStatus');
+    const waveDistance = document.getElementById('waveDistance');
+    const waveAmplitude = document.getElementById('waveAmplitude');
+    const waveFrequency = document.getElementById('waveFrequency');
+    let startTime = null;
+    let cycleCount = 0;
+    const cycleDuration = 5000; // 5 seconds per cycle
+    const maxWaveRadius = 400;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+    }
+
+    function animateWave(timestamp) {
+      if (!startTime) startTime = timestamp;
+      let elapsedTime = timestamp - startTime;
+      let cycleTime = elapsedTime % cycleDuration;
+      let progress = cycleTime / cycleDuration;
+      // Wave animation with smooth transition and disappearance
+      let waveProgress = Math.min(progress * 1.1, 1); // Extend slightly to ensure full disappearance
+      let waveRadius = easeInOutCubic(waveProgress) * maxWaveRadius;
+      wave.setAttribute('r', waveRadius);
+      // Wave opacity
+      let waveOpacity = progress > 0.9 ? (1 - progress) * 10 : 1;
+      wave.setAttribute('stroke-opacity', waveOpacity);
+      // Node activation
+      let node1Opacity = Math.max(0, 1 - progress * 10);
+      let node2Opacity = Math.max(0, (progress - 0.9) * 10);
+      node1.setAttribute('fill', progress < 0.1 ? '#e74c3c' : 'url(#nodeGradient)');
+      node2.setAttribute('fill', progress > 0.9 ? '#e74c3c' : 'url(#nodeGradient)');
+      data1.setAttribute('opacity', node1Opacity);
+      data2.setAttribute('opacity', node2Opacity);
+      // Update metrics
+      latencyValue.textContent = `${Math.floor(progress * 1000)} ms`;
+      cycleCounter.textContent = Math.floor(elapsedTime / cycleDuration);
+      let status;
+      if (progress < 0.1) status = 'Iniciando';
+      else if (progress > 0.9) status = 'Finalizando';
+      else status = 'Propagando';
+      systemStatus.textContent = status;
+      waveDistance.textContent = `${Math.floor(waveRadius)} unidades`;
+      let amplitude = Math.sin(progress * Math.PI) * 10;
+      waveAmplitude.textContent = amplitude.toFixed(2);
+      let frequency = 50 + Math.sin(progress * Math.PI * 2) * 20;
+      waveFrequency.textContent = `${frequency.toFixed(2)} Hz`;
+      requestAnimationFrame(animateWave);
+    }
+    // Start the animation immediately
+    requestAnimationFrame(animateWave);
+    ]]>
+  </script>
+</svg>
